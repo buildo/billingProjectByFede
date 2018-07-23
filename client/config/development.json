@@ -1,0 +1,7 @@
+{
+  "port": 3000,
+  "bundle": {
+    "apiEndpoint": "http://localhost:1337/localhost:8080",
+    "timeout": 2000
+  }
+}
