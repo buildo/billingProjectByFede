@@ -1,0 +1,13 @@
+@import '~theme/variables.scss';
+
+.budgets {
+  .budgetName {
+    cursor: pointer;
+    font-weight: $semibold;
+  }
+
+  .budgetName:hover {
+    color: $coolBlue;
+    font-weight: $bold;
+  }
+}

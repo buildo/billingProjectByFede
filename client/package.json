@@ -10,8 +10,9 @@
     "lint-style": "bento lint-style"
   },
   "dependencies": {
-    "@buildo/bento": "^6.0.0",
+    "@buildo/bento": "^8.1.1",
     "axios": "^0.18.0",
+    "buildo-react-components": "^0.38.1",
     "classnames": "^2.2.5",
     "es6-promise": "^4.2.2",
     "lodash": "^4.17.4",
@@ -19,8 +20,6 @@
     "react-dom": "^16.2.0"
   },
   "devDependencies": {
-    "eslint-config-prettier": "^2.9.0",
-    "stylelint-config-prettier": "^3.3.0",
     "@types/classnames": "^2.2.3",
     "@types/fixed-data-table": "^0.6.32",
     "@types/lodash": "^4.14.93",
@@ -32,7 +31,9 @@
     "@types/react-intl": "^2.3.3",
     "@types/react-select": "^1.1.0",
     "@types/react-transition-group": "^2.0.6",
+    "eslint-config-prettier": "^2.9.0",
     "metarpheus": "^1.1.0",
-    "metarpheus-io-ts": "^0.3.0"
+    "metarpheus-io-ts": "^0.3.0",
+    "stylelint-config-prettier": "^3.3.0"
   }
 }
