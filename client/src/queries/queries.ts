@@ -13,8 +13,5 @@ export const currentView = Query({
 export const budgets = Query({
   cacheStrategy: available,
   params: {},
-  fetch: () =>
-    API.metaRoutes.budgetApi_getBudgets().catch(error => ({
-      error,
-    })),
+  fetch: () => API.metaRoutes.budgetApi_getBudgets(),
 });

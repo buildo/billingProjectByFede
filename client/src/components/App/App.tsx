@@ -25,8 +25,9 @@ class App extends React.Component<typeof queries.Props> {
     const { currentView } = this.props;
     return (
       <View column className="app" hAlignContent="center">
-        <h1>Bento App</h1>
-        {currentView.ready && currentView.value === 'budgets' && <Budgets />}
+        <h1>Budgets</h1>
+        {currentView.ready &&
+          currentView.value.view === 'budgets' && <Budgets />}
       </View>
     );
   }

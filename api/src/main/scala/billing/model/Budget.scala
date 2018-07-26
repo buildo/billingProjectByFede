@@ -1,3 +1,6 @@
 package billing.model
 
-case class Budget(name: String, price: Int)
+case class Budget(title: String,
+                  value: String,
+                  notes: String,
+                  defaultPricePerDay: String)

@@ -1,1 +1,10 @@
 @import '~@buildo/bento/components/input.scss';
+@import '~theme/variables.scss';
+
+.myInput {
+  margin: 8px 0;
+
+  .inputLabel {
+    font-size: $semibold;
+  }
+}
