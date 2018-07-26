@@ -1,28 +1,33 @@
-import * as metarpheusModels from 'metarpheus/model-ts';
+import * as m from 'metarpheus/model-ts';
 
-export type Budget = metarpheusModels.Budget;
+export type Budget = m.Budget;
 
-export const Budget = metarpheusModels.Budget;
+export const Budget = m.Budget;
 
 import { HistoryLocation } from '@buildo/bento/data';
 
 export { HistoryLocation };
 
-export type CurrentView = 'budgets' | 'costs';
+export type CurrentView =
+  | { view: 'budgets' }
+  | { view: 'budget-details'; id: m.UUID };
+
+const budgetDetailsMatch = /^\/budget-details\/([^\/]+)$/;
 
 export function locationToView(location: HistoryLocation): CurrentView {
-  switch (location.pathname) {
-    case '/costs':
-      return 'costs';
-    default:
-      return 'budgets';
+  const budgetDetailMatched = location.pathname.match(budgetDetailsMatch);
+
+  if (budgetDetailMatched) {
+    return { view: 'budget-details', id: budgetDetailMatched[1] };
   }
+
+  return { view: 'budgets' };
 }
 
 export function viewToLocation(view: CurrentView): HistoryLocation {
-  switch (view) {
-    case 'costs':
-      return { pathname: '/costs', search: {} };
+  switch (view.view) {
+    case 'budget-details':
+      return { pathname: `/budget-details/${view.id}`, search: {} };
     default:
       return { pathname: '/', search: {} };
   }
