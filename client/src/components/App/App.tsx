@@ -12,6 +12,7 @@ In this simple example it does a bit of both.
 
 import * as React from 'react';
 import View from 'View';
+import Budget from 'Budget';
 import Budgets from 'Budgets';
 import { declareQueries } from '@buildo/bento/data';
 import { currentView } from 'queries';
@@ -23,11 +24,15 @@ const queries = declareQueries({ currentView });
 class App extends React.Component<typeof queries.Props> {
   render() {
     const { currentView } = this.props;
+
     return (
       <View column className="app" hAlignContent="center">
-        <h1>Budgets</h1>
-        {currentView.ready &&
-          currentView.value.view === 'budgets' && <Budgets />}
+        {currentView.ready && (
+          <View column>
+            {currentView.value.view === 'budgets' && <Budgets />}
+            {currentView.value.view === 'budget-details' && <Budget />}
+          </View>
+        )}
       </View>
     );
   }

@@ -190,6 +190,10 @@ class Budgets extends React.Component<Props, State> {
         {budgets.ready &&
           !budgets.loading && (
             <View column>
+              <View column hAlignContent="center">
+                <h1>Budgets</h1>
+              </View>
+
               <Button onClick={this.openModal}>add a new budget</Button>
 
               <Table
