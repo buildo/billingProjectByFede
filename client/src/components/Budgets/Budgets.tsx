@@ -209,7 +209,7 @@ class Budgets extends React.Component<Props, State> {
                   <Cell>
                     {(_, { title, id }) => (
                       <div
-                        className="budgetName"
+                        className="clickable"
                         id={id}
                         onClick={this.goToBudgetDetail}
                       >

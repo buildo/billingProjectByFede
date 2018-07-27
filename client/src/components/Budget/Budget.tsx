@@ -4,6 +4,7 @@ import { declareQueries, declareCommands } from '@buildo/bento/data';
 import { budgets, currentView } from 'queries';
 import { Budget, viewToLocation } from 'model';
 import { doUpdateLocation } from 'commands';
+import CostAdder from 'CostAdder';
 import GoBackIcon from 'GoBackIcon';
 import View from 'View';
 
@@ -61,6 +62,10 @@ class BudgetComponent extends React.PureComponent<Props, State> {
         <View style={{ width: '100%' }} column grow={1}>
           <h3>notes:</h3>
           <div>{budget.notes}</div>
+        </View>
+
+        <View style={{ width: '100%' }} column grow={1} hAlignContent="right">
+          <CostAdder />
         </View>
       </View>
     ));

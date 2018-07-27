@@ -14,3 +14,13 @@
   outline: -webkit-focus-ring-color auto 5px;
   outline-color: $mediumBlue;
 }
+
+.clickable {
+  font-weight: $semibold;
+}
+
+.clickable:hover {
+  font-weight: $bold;
+  color: $coolBlue;
+  cursor: pointer;
+}
