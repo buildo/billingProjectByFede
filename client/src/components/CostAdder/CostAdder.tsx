@@ -1,6 +1,7 @@
 import * as React from 'react';
 import DropdownMenu, { DropdownItem } from 'DropdownMenu';
 import { declareCommands } from '@buildo/bento/data';
+import { Cost } from 'model';
 import { createBudget, addCost } from 'commands';
 import DailyPriceModal from './DailyPriceModal';
 import FixedPriceModal from './FixedPriceModal';
@@ -23,9 +24,23 @@ const initialState = {
 };
 
 const commands = declareCommands({ addCost, createBudget });
+const isValid = (cost: Cost) =>
+  !!cost.title && (!!cost.value || (!!cost.days && !!cost.pricePerDay));
 
 class BudgetAdder extends React.PureComponent<Props, State> {
   state = initialState;
+
+  handleAddCost = ({ cost }: { cost: Cost; budgetUuid: string }) => {
+    const { addCost, budgetUuid } = this.props;
+
+    if (!isValid(cost)) {
+      alert('you forgot to fill in some mandatory fields!');
+      return;
+    }
+
+    addCost({ cost, budgetUuid });
+    this.closeModals();
+  };
 
   openModal = (modal: Modal) =>
     this.setState({
@@ -35,7 +50,7 @@ class BudgetAdder extends React.PureComponent<Props, State> {
   closeModals = () => this.setState(initialState);
 
   render() {
-    const { addCost, budgetUuid, budgetName, defaultPricePerDay } = this.props;
+    const { budgetUuid, budgetName, defaultPricePerDay } = this.props;
     const { fixedPriceModal, dailyPriceModal } = this.state;
 
     return (
@@ -51,7 +66,7 @@ class BudgetAdder extends React.PureComponent<Props, State> {
 
         {fixedPriceModal && (
           <FixedPriceModal
-            addCost={addCost}
+            addCost={this.handleAddCost}
             budgetUuid={budgetUuid}
             budgetName={budgetName}
             onClose={this.closeModals}
@@ -61,7 +76,7 @@ class BudgetAdder extends React.PureComponent<Props, State> {
         {dailyPriceModal && (
           <DailyPriceModal
             onClose={this.closeModals}
-            addCost={addCost}
+            addCost={this.handleAddCost}
             budgetUuid={budgetUuid}
             budgetName={budgetName}
             defaultPricePerDay={defaultPricePerDay}

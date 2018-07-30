@@ -12,33 +12,37 @@ type Props = {
   budgetUuid: string;
   budgetName: string;
   onClose: () => void;
-  addCost: ({ cost, budgetUuid }: { cost: Cost; budgetUuid: string }) => void;
+  addCost: ({ cost }: { cost: Cost }) => void;
 };
 type State = { inputValues: Cost };
 
 type InputNames = keyof Cost;
 
+const initialState = {
+  inputValues: {
+    title: '',
+    value: '',
+    notes: '',
+    allocationMonth: undefined,
+    allocationYear: undefined,
+  },
+};
+
 class FixedPriceModal extends React.PureComponent<Props, State> {
-  state = {
-    inputValues: {
-      title: '',
-      value: '',
-      notes: '',
-      allocationMonth: undefined,
-      allocationYear: undefined,
-    },
-  };
+  state = initialState;
+
+  clearState = () => this.setState(initialState as State);
 
   handleAddCost = () => {
-    const { addCost, budgetUuid, onClose } = this.props;
+    const { addCost } = this.props;
     const { inputValues } = this.state;
 
     Object.keys(inputValues).forEach(
       key => inputValues[key] == null && delete inputValues[key],
     );
 
-    addCost({ cost: inputValues, budgetUuid });
-    onClose();
+    addCost({ cost: inputValues });
+    this.clearState();
   };
 
   onChangeInput = (inputName: InputNames) => (inputValue: string): void => {

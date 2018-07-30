@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { declareQueries, declareCommands } from '@buildo/bento/data';
 import { budgets } from 'queries';
 import { createBudget, doUpdateLocation } from 'commands';
-import { getBudgetConsumedPercentage } from 'utils/costs';
+import { addCommas, getBudgetConsumedPercentage } from 'utils/costs';
 import Table, { Column, Cell, Header } from 'Table';
 import Modal from 'Modal';
 import View from 'View';
@@ -32,20 +32,24 @@ type InputNames = keyof State['inputValues'];
 
 const tableWidth = 600;
 const columnWidth = tableWidth / 4;
+const isValid = (budget: Budget) => !!budget.title;
+const initialState = {
+  sortBy: 'name',
+  sortDir: 'asc',
+  modalIsOpen: false,
+  inputValues: {
+    title: '',
+    value: '',
+    notes: '',
+    defaultPricePerDay: '',
+    costs: [],
+  },
+};
 
 class Budgets extends React.Component<Props, State> {
-  state = {
-    sortBy: 'name',
-    sortDir: 'asc',
-    modalIsOpen: false,
-    inputValues: {
-      title: '',
-      value: '',
-      notes: '',
-      defaultPricePerDay: '',
-      costs: [],
-    },
-  } as State;
+  state = initialState as State;
+
+  clearState = () => this.setState(initialState as State);
 
   sortData = (budgets: { [key: string]: Budget }) => {
     const { sortBy, sortDir } = this.state;
@@ -106,7 +110,13 @@ class Budgets extends React.Component<Props, State> {
     const { inputValues: budget } = this.state;
     const { createBudget } = this.props;
 
+    if (!isValid(budget)) {
+      alert('you forgot some mandatory fields!');
+      return;
+    }
+
     createBudget({ budget });
+    this.clearState();
 
     this.closeModal();
   };
@@ -158,7 +168,7 @@ class Budgets extends React.Component<Props, State> {
                 onChange={this.onChangeInput('title')}
               />
               <Input
-                label="Value:"
+                label="Amount:"
                 type="number"
                 value={inputValues.value || ''}
                 onChange={this.onChangeInput('value')}
@@ -239,7 +249,7 @@ class Budgets extends React.Component<Props, State> {
                   <Header>Amount</Header>
                   <Cell>
                     {(_, { value }) => (
-                      <span>{value ? `${value}€` : '--'}</span>
+                      <span>{value ? `${addCommas(value)}€` : '--'}</span>
                     )}
                   </Cell>
                 </Column>
@@ -247,7 +257,11 @@ class Budgets extends React.Component<Props, State> {
                 <Column name="completion" sortable width={columnWidth}>
                   <Header>% consumed</Header>
                   <Cell>
-                    {(_, { completion }) => <span>{completion}%</span>}
+                    {(_, { completion }) => (
+                      <span className={completion > 100 ? 'danger' : ''}>
+                        {completion}%
+                      </span>
+                    )}
                   </Cell>
                 </Column>
               </Table>

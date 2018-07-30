@@ -4,7 +4,11 @@ import { declareQueries, declareCommands } from '@buildo/bento/data';
 import { budgets, currentView } from 'queries';
 import { Budget, viewToLocation } from 'model';
 import { doUpdateLocation } from 'commands';
-import { getBudgetConsumed, getBudgetConsumedPercentage } from 'utils/costs';
+import {
+  addCommas,
+  getBudgetConsumed,
+  getBudgetConsumedPercentage,
+} from 'utils/costs';
 import CostAdder from 'CostAdder';
 import GoBackIcon from 'GoBackIcon';
 import View from 'View';
@@ -55,12 +59,14 @@ class BudgetComponent extends React.PureComponent<Props, State> {
         <View style={{ width: '100%' }} grow={1}>
           <View column grow={1}>
             <h3>value:</h3>
-            <div>{budget.value ? `${budget.value}€` : '--'}</div>
+            <div>
+              {budget.value ? `${addCommas(`${budget.value}`)}€` : '--'}
+            </div>
           </View>
 
           <View column grow={1}>
             <h3>costs:</h3>
-            <div>{`${getBudgetConsumed(budget)}€`}</div>
+            <div>{`${addCommas(`${getBudgetConsumed(budget)}`)}€`}</div>
           </View>
 
           <View column grow={1}>
@@ -74,7 +80,13 @@ class BudgetComponent extends React.PureComponent<Props, State> {
           <div>{budget.notes}</div>
         </View>
 
-        <View style={{ width: '100%' }} column grow={1}>
+        <View
+          className="costsTableWrapper"
+          style={{ width: '100%' }}
+          column
+          grow={1}
+          hAlignContent="center"
+        >
           <View style={{ width: '600px' }} column hAlignContent="right">
             <CostAdder
               budgetUuid={budget.id}

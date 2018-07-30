@@ -14,34 +14,41 @@ type Props = {
   budgetName: string;
   defaultPricePerDay?: string;
   onClose: () => void;
-  addCost: ({ cost, budgetUuid }: { cost: Cost; budgetUuid: string }) => void;
+  addCost: ({ cost }: { cost: Cost }) => void;
 };
-type State = { inputValues: Cost };
+type State = { inputValues: Cost; pricePerDay: string };
 
 type InputNames = keyof Cost;
 
+const initialState = {
+  inputValues: {
+    title: '',
+    days: '',
+    notes: '',
+    allocationMonth: undefined,
+    allocationYear: undefined,
+    pricePerDay: '',
+  },
+};
+
 class DailyPriceModal extends React.PureComponent<Props, State> {
-  state = {
-    inputValues: {
-      title: '',
+  state = { ...initialState, pricePerDay: this.props.defaultPricePerDay || '' };
+
+  clearState = () =>
+    this.setState({
+      ...initialState,
       pricePerDay: this.props.defaultPricePerDay || '',
-      days: '',
-      notes: '',
-      allocationMonth: undefined,
-      allocationYear: undefined,
-    },
-  };
+    } as State);
 
   handleAddCost = () => {
-    const { addCost, budgetUuid, onClose } = this.props;
+    const { addCost } = this.props;
     const { inputValues } = this.state;
 
     Object.keys(inputValues).forEach(
       key => inputValues[key] == null && delete inputValues[key],
     );
 
-    addCost({ cost: inputValues, budgetUuid });
-    onClose();
+    addCost({ cost: inputValues });
   };
 
   onChangeInput = (inputName: InputNames) => (inputValue: string): void => {
@@ -77,7 +84,7 @@ class DailyPriceModal extends React.PureComponent<Props, State> {
         onDismiss={onClose}
         transitionEnterTimeout={0}
         transitionLeaveTimeout={0}
-        title={`add a new fixed cost for budget ${budgetName}`}
+        title={`add a new daily cost for budget ${budgetName}`}
         footer={
           <View hAlignContent="right">
             <Button size="small" style={{ marginRight: 10 }} onClick={onClose}>

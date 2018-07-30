@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Cost } from 'model';
 import Table, { Column, Cell, Header } from 'Table';
 import View from 'View';
-import { getCostValue } from 'utils/costs';
+import { addCommas, getCostValue } from 'utils/costs';
 
 type SortDir = 'asc' | 'desc' | undefined;
 
@@ -49,6 +49,11 @@ class CostsTable extends React.PureComponent<Props, State> {
         sortBy={sortBy}
         sortDir={sortDir}
       >
+        <Column name="title" sortable width={columnWidth}>
+          <Header>Title</Header>
+          <Cell>{(_, { title }) => <span>{title}</span>}</Cell>
+        </Column>
+
         <Column name="allocation" sortable width={columnWidth}>
           <Header>Month</Header>
           <Cell>
@@ -62,20 +67,21 @@ class CostsTable extends React.PureComponent<Props, State> {
           </Cell>
         </Column>
 
-        <Column name="title" sortable width={columnWidth}>
-          <Header>Title</Header>
-          <Cell>{(_, { title }) => <span>{title}</span>}</Cell>
-        </Column>
-
         <Column name="days" sortable width={columnWidth}>
           <Header>Days</Header>
-          <Cell>{(_, { days }) => <span>{days}</span>}</Cell>
+          <Cell>
+            {(_, { days, pricePerDay }) => (
+              <span>{days && `${days} x ${pricePerDay}€`}</span>
+            )}
+          </Cell>
         </Column>
 
         <Column name="value" sortable width={columnWidth}>
           <Header>Amount</Header>
           <Cell>
-            {(_, cost: Cost) => <span>{`${getCostValue(cost)}€`}</span>}
+            {(_, cost: Cost) => (
+              <span>{addCommas(`${getCostValue(cost)}€`)}</span>
+            )}
           </Cell>
         </Column>
       </Table>

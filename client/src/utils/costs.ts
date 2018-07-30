@@ -1,10 +1,22 @@
 import { Cost, Budget } from 'model';
 
+export const addCommas = (nStr: string): string => {
+  nStr += '';
+  var x = nStr.split('.');
+  var x1 = x[0];
+  var x2 = x.length > 1 ? '.' + x[1] : '';
+  var rgx = /(\d+)(\d{3})/;
+  while (rgx.test(x1)) {
+    x1 = x1.replace(rgx, '$1' + ',' + '$2');
+  }
+  return x1 + x2;
+};
+
 export const getCostValue = (cost: Cost) =>
   cost.value
-    ? parseInt(cost.value, 10)
+    ? parseFloat(cost.value)
     : cost.days && cost.pricePerDay
-      ? parseInt(cost.days, 10) * parseInt(cost.pricePerDay, 10)
+      ? parseFloat(cost.days) * parseFloat(cost.pricePerDay)
       : 0;
 
 export const getBudgetConsumed = (budget: Budget): number =>
