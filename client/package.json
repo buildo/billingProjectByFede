@@ -35,7 +35,7 @@
     "@types/react-transition-group": "^2.0.6",
     "eslint-config-prettier": "^2.9.0",
     "metarpheus": "^1.1.0",
-    "metarpheus-io-ts": "^0.3.0",
+    "metarpheus-io-ts": "^0.4.1",
     "stylelint-config-prettier": "^3.3.0"
   }
 }

@@ -4948,18 +4948,18 @@ merge2@^1.2.1:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/merge2/-/merge2-1.2.2.tgz#03212e3da8d86c4d8523cebd6318193414f94e34"
 
-metarpheus-io-ts@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/metarpheus-io-ts/-/metarpheus-io-ts-0.3.0.tgz#8efaa228a66fbc72b3c7802a7838dc6043514a89"
+metarpheus-io-ts@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/metarpheus-io-ts/-/metarpheus-io-ts-0.4.0.tgz#9acac06c9fcd321462bdd9c360c2bc6bca702eaf"
   dependencies:
     commander "^2.9.0"
     fp-ts "^1.7.0"
     io-ts-codegen "^0.1.8"
     lodash "^4.17.4"
 
-metarpheus-io-ts@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/metarpheus-io-ts/-/metarpheus-io-ts-0.4.0.tgz#9acac06c9fcd321462bdd9c360c2bc6bca702eaf"
+metarpheus-io-ts@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/metarpheus-io-ts/-/metarpheus-io-ts-0.4.1.tgz#587c015dba0e37678db53d2089cf209445168eda"
   dependencies:
     commander "^2.9.0"
     fp-ts "^1.7.0"

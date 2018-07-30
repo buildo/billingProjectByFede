@@ -1,8 +1,27 @@
 import * as m from 'metarpheus/model-ts';
 
+export type Year = '2015' | '2016' | '2017' | '2018';
+export type Month =
+  | '01'
+  | '02'
+  | '03'
+  | '04'
+  | '05'
+  | '06'
+  | '07'
+  | '08'
+  | '09'
+  | '10'
+  | '11'
+  | '12';
+
 export type Budget = m.Budget;
 
 export const Budget = m.Budget;
+
+export type Cost = m.Cost;
+
+export const Cost = m.Cost;
 
 import { HistoryLocation } from '@buildo/bento/data';
 

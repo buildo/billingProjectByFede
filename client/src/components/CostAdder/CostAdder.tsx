@@ -1,7 +1,7 @@
 import * as React from 'react';
 import DropdownMenu, { DropdownItem } from 'DropdownMenu';
 import { declareCommands } from '@buildo/bento/data';
-import { createBudget } from 'commands';
+import { createBudget, addCost } from 'commands';
 import DailyPriceModal from './DailyPriceModal';
 import FixedPriceModal from './FixedPriceModal';
 
@@ -11,15 +11,20 @@ import View from 'View';
 type Modal = 'fixedPriceModal' | 'dailyPriceModal';
 
 type State = { [key in Modal]: boolean };
+type Props = typeof commands.Props & {
+  budgetUuid: string;
+  budgetName: string;
+  defaultPricePerDay: string | undefined;
+};
 
 const initialState = {
   fixedPriceModal: false,
   dailyPriceModal: false,
 };
 
-const commands = declareCommands({ createBudget });
+const commands = declareCommands({ addCost, createBudget });
 
-class BudgetAdder extends React.PureComponent<typeof commands.Props, State> {
+class BudgetAdder extends React.PureComponent<Props, State> {
   state = initialState;
 
   openModal = (modal: Modal) =>
@@ -30,9 +35,8 @@ class BudgetAdder extends React.PureComponent<typeof commands.Props, State> {
   closeModals = () => this.setState(initialState);
 
   render() {
+    const { addCost, budgetUuid, budgetName, defaultPricePerDay } = this.props;
     const { fixedPriceModal, dailyPriceModal } = this.state;
-
-    console.log(this.state);
 
     return (
       <View>
@@ -45,9 +49,24 @@ class BudgetAdder extends React.PureComponent<typeof commands.Props, State> {
           <DropdownItem name="dailyPriceModal">add a daily cost</DropdownItem>
         </DropdownMenu>
 
-        {fixedPriceModal && <FixedPriceModal onClose={this.closeModals} />}
+        {fixedPriceModal && (
+          <FixedPriceModal
+            addCost={addCost}
+            budgetUuid={budgetUuid}
+            budgetName={budgetName}
+            onClose={this.closeModals}
+          />
+        )}
 
-        {dailyPriceModal && <DailyPriceModal onClose={this.closeModals} />}
+        {dailyPriceModal && (
+          <DailyPriceModal
+            onClose={this.closeModals}
+            addCost={addCost}
+            budgetUuid={budgetUuid}
+            budgetName={budgetName}
+            defaultPricePerDay={defaultPricePerDay}
+          />
+        )}
       </View>
     );
   }

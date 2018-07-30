@@ -1,5 +1,19 @@
 @import '~theme/variables.scss';
 
+.budgets {
+  .budgetAdder {
+    margin-bottom: 10px;
+  }
+
+  .clickable {
+    transition: padding-left 0.2s;
+  }
+
+  .clickable:hover {
+    padding-left: 10px;
+  }
+}
+
 .budgetModalBody {
   padding: 0 15%;
 }
