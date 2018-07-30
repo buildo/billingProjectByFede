@@ -1,2 +1,2 @@
-import BudgetAdder from './BudgetAdder';
-export default BudgetAdder;
+import CostAdder from './CostAdder';
+export default CostAdder;

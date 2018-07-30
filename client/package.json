@@ -11,13 +11,15 @@
   },
   "dependencies": {
     "@buildo/bento": "^8.1.1",
+    "@types/react-icons": "^2.2.5",
     "axios": "^0.18.0",
     "buildo-react-components": "^0.38.1",
     "classnames": "^2.2.5",
     "es6-promise": "^4.2.2",
     "lodash": "^4.17.4",
     "react": "^16.2.0",
-    "react-dom": "^16.2.0"
+    "react-dom": "^16.2.0",
+    "react-icons": "^2.2.7"
   },
   "devDependencies": {
     "@types/classnames": "^2.2.3",
@@ -33,7 +35,7 @@
     "@types/react-transition-group": "^2.0.6",
     "eslint-config-prettier": "^2.9.0",
     "metarpheus": "^1.1.0",
-    "metarpheus-io-ts": "^0.3.0",
+    "metarpheus-io-ts": "^0.4.1",
     "stylelint-config-prettier": "^3.3.0"
   }
 }

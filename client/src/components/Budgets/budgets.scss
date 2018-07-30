@@ -1,14 +1,16 @@
 @import '~theme/variables.scss';
 
 .budgets {
-  .budgetName {
-    cursor: pointer;
-    font-weight: $semibold;
+  .budgetAdder {
+    margin-bottom: 10px;
   }
 
-  .budgetName:hover {
-    color: $coolBlue;
-    font-weight: $bold;
+  .clickable {
+    transition: padding-left 0.2s;
+  }
+
+  .clickable:hover {
+    padding-left: 10px;
   }
 }
 

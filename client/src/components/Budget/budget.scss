@@ -1,0 +1,17 @@
+.budget {
+  width: 100%;
+
+  .costsTableWrapper {
+    margin-top: 50px;
+  }
+
+  .goBackIcon {
+    width: 100%;
+    font-size: 24px;
+    padding-left: 10%;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    cursor: pointer;
+  }
+}

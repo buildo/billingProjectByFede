@@ -2,19 +2,28 @@ import * as React from 'react';
 import Button from 'Button';
 import View from 'View';
 
+import './dropdownMenu.scss';
+
 export const DropdownItem: React.SFC<{
   name: string;
   children: any;
   onClick?(a: React.MouseEvent<HTMLDivElement>): void;
 }> = ({ name, children, onClick }) => (
-  <div id={name} onClick={onClick}>
+  <View
+    className="dropdownItem clickable"
+    id={name}
+    onClick={onClick}
+    vAlignContent="center"
+    hAlignContent="center"
+  >
     {children}
-  </div>
+  </View>
 );
 
 type Props = {
   children: Array<JSX.Element>;
   caption: string;
+  className: string;
   onClick(childName: string): void;
 };
 
@@ -50,17 +59,19 @@ class DropdownMenu extends React.Component<Props, State> {
 
   render() {
     const { status } = this.state;
-    const { children, caption } = this.props;
+    const { children, caption, className = '' } = this.props;
 
     return (
-      <View column>
+      <View column className={`${className} dropdownMenu`}>
         <Button onClick={this.toggleStatus}>{caption}</Button>
 
-        {status === 'open'
-          ? React.Children.map(children, (child: React.ReactElement<any>) => (
+        {status === 'open' ? (
+          <View column className="dropdownList">
+            {React.Children.map(children, (child: React.ReactElement<any>) => (
               <child.type {...child.props} onClick={this.handleChildClick} />
-            ))
-          : null}
+            ))}
+          </View>
+        ) : null}
       </View>
     );
   }

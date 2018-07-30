@@ -174,6 +174,19 @@
     "@types/node" "*"
     "@types/react" "*"
 
+"@types/react-icon-base@*":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@types/react-icon-base/-/react-icon-base-2.1.2.tgz#2da7bb119c5acd8b5c453063a5c591166e5cf5ca"
+  dependencies:
+    "@types/react" "*"
+
+"@types/react-icons@^2.2.5":
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/@types/react-icons/-/react-icons-2.2.5.tgz#fc6e78d113415ecc5602f56550a8e3022f5fdf11"
+  dependencies:
+    "@types/react" "*"
+    "@types/react-icon-base" "*"
+
 "@types/react-intl@^2.3.3":
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/@types/react-intl/-/react-intl-2.3.8.tgz#de56b21b67e39df24bc0fc7e67b437976b666919"
@@ -4935,18 +4948,18 @@ merge2@^1.2.1:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/merge2/-/merge2-1.2.2.tgz#03212e3da8d86c4d8523cebd6318193414f94e34"
 
-metarpheus-io-ts@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/metarpheus-io-ts/-/metarpheus-io-ts-0.3.0.tgz#8efaa228a66fbc72b3c7802a7838dc6043514a89"
+metarpheus-io-ts@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/metarpheus-io-ts/-/metarpheus-io-ts-0.4.0.tgz#9acac06c9fcd321462bdd9c360c2bc6bca702eaf"
   dependencies:
     commander "^2.9.0"
     fp-ts "^1.7.0"
     io-ts-codegen "^0.1.8"
     lodash "^4.17.4"
 
-metarpheus-io-ts@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/metarpheus-io-ts/-/metarpheus-io-ts-0.4.0.tgz#9acac06c9fcd321462bdd9c360c2bc6bca702eaf"
+metarpheus-io-ts@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/metarpheus-io-ts/-/metarpheus-io-ts-0.4.1.tgz#587c015dba0e37678db53d2089cf209445168eda"
   dependencies:
     commander "^2.9.0"
     fp-ts "^1.7.0"
@@ -6495,6 +6508,16 @@ react-flexview@3.0.2:
     prop-types "^15.5.6"
     sass-flex-mixins "^0.1.0"
     typelevel-ts "^0.2.2"
+
+react-icon-base@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/react-icon-base/-/react-icon-base-2.1.0.tgz#a196e33fdf1e7aaa1fda3aefbb68bdad9e82a79d"
+
+react-icons@^2.2.7:
+  version "2.2.7"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-2.2.7.tgz#d7860826b258557510dac10680abea5ca23cf650"
+  dependencies:
+    react-icon-base "2.1.0"
 
 react-input-autosize@^2.1.0:
   version "2.2.1"

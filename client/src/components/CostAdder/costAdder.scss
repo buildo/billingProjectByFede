@@ -1,0 +1,10 @@
+@import '~theme/variables.scss';
+
+.costAdder {
+  margin-bottom: 10px;
+
+  .dropdownItem {
+    background-color: $mediumGrey;
+    height: 40px;
+  }
+}

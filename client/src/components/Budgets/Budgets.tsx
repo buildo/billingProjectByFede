@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { declareQueries, declareCommands } from '@buildo/bento/data';
 import { budgets } from 'queries';
 import { createBudget, doUpdateLocation } from 'commands';
+import { addCommas, getBudgetConsumedPercentage } from 'utils/costs';
 import Table, { Column, Cell, Header } from 'Table';
 import Modal from 'Modal';
 import View from 'View';
@@ -29,18 +30,26 @@ type State = {
 
 type InputNames = keyof State['inputValues'];
 
+const tableWidth = 600;
+const columnWidth = tableWidth / 4;
+const isValid = (budget: Budget) => !!budget.title;
+const initialState = {
+  sortBy: 'name',
+  sortDir: 'asc',
+  modalIsOpen: false,
+  inputValues: {
+    title: '',
+    value: '',
+    notes: '',
+    defaultPricePerDay: '',
+    costs: [],
+  },
+};
+
 class Budgets extends React.Component<Props, State> {
-  state = {
-    sortBy: 'name',
-    sortDir: 'asc',
-    modalIsOpen: false,
-    inputValues: {
-      title: '',
-      value: '',
-      notes: '',
-      defaultPricePerDay: '',
-    },
-  } as State;
+  state = initialState as State;
+
+  clearState = () => this.setState(initialState as State);
 
   sortData = (budgets: { [key: string]: Budget }) => {
     const { sortBy, sortDir } = this.state;
@@ -49,7 +58,7 @@ class Budgets extends React.Component<Props, State> {
       Object.keys(budgets).map(id => ({
         ...budgets[id],
         id,
-        completion: 0,
+        completion: getBudgetConsumedPercentage(budgets[id]),
       })),
       [sortBy],
       [sortDir as string],
@@ -98,10 +107,17 @@ class Budgets extends React.Component<Props, State> {
   };
 
   handleAddBudget = () => {
-    const { inputValues } = this.state;
+    const { inputValues: budget } = this.state;
     const { createBudget } = this.props;
 
-    createBudget({ budget: inputValues });
+    if (!isValid(budget)) {
+      alert('you forgot some mandatory fields!');
+      return;
+    }
+
+    createBudget({ budget });
+    this.clearState();
+
     this.closeModal();
   };
 
@@ -152,15 +168,15 @@ class Budgets extends React.Component<Props, State> {
                 onChange={this.onChangeInput('title')}
               />
               <Input
-                label="Value*:"
+                label="Amount:"
                 type="number"
-                value={inputValues.value}
+                value={inputValues.value || ''}
                 onChange={this.onChangeInput('value')}
               />
               <Input
-                label="default price per day:"
+                label="Daily rate:"
                 type="number"
-                value={inputValues.defaultPricePerDay}
+                value={inputValues.defaultPricePerDay || ''}
                 onChange={this.onChangeInput('defaultPricePerDay')}
               />
               <span style={{ fontWeight: 600 }}>notes:</span>
@@ -190,40 +206,62 @@ class Budgets extends React.Component<Props, State> {
         {budgets.ready &&
           !budgets.loading && (
             <View column>
-              <Button onClick={this.openModal}>add a new budget</Button>
+              <View column hAlignContent="center">
+                <h1>Budgets</h1>
+              </View>
+
+              <View column hAlignContent="right">
+                <Button className="budgetAdder" onClick={this.openModal}>
+                  add a new budget
+                </Button>
+              </View>
 
               <Table
                 data={this.sortData(budgets.value)}
                 height={300}
-                width={600}
+                width={tableWidth}
                 onSortChange={this.onSortChange}
                 sortBy={sortBy}
                 sortDir={sortDir}
               >
-                <Column name="title" sortable width={200}>
+                <Column name="lastUpdate" sortable width={columnWidth}>
+                  <Header>Last update</Header>
+                  <Cell>{() => <span>30/07/2018</span>}</Cell>
+                </Column>
+
+                <Column name="title" sortable width={columnWidth}>
                   <Header>Title</Header>
                   <Cell>
                     {(_, { title, id }) => (
-                      <div
-                        className="budgetName"
+                      <View
+                        grow={1}
+                        className="clickable"
                         id={id}
                         onClick={this.goToBudgetDetail}
                       >
                         {title}
-                      </div>
+                      </View>
                     )}
                   </Cell>
                 </Column>
 
-                <Column name="value" sortable width={200}>
-                  <Header>Value</Header>
-                  <Cell>{(_, { value }) => <span>{value}€</span>}</Cell>
+                <Column name="value" sortable width={columnWidth}>
+                  <Header>Amount</Header>
+                  <Cell>
+                    {(_, { value }) => (
+                      <span>{value ? `${addCommas(value)}€` : '--'}</span>
+                    )}
+                  </Cell>
                 </Column>
 
-                <Column name="completion" sortable width={200}>
-                  <Header>% spent</Header>
+                <Column name="completion" sortable width={columnWidth}>
+                  <Header>% consumed</Header>
                   <Cell>
-                    {(_, { completion }) => <span>{completion}%</span>}
+                    {(_, { completion }) => (
+                      <span className={completion > 100 ? 'danger' : ''}>
+                        {completion}%
+                      </span>
+                    )}
                   </Cell>
                 </Column>
               </Table>

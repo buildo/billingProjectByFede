@@ -105,5 +105,30 @@ export default function getRoutes(config: RouteConfig) {
         parseError,
       ) as any;
     },
+
+    budgetApi_addBudgetCost: function({
+      budgetUuid,
+      cost,
+    }: {
+      budgetUuid: m.UUID;
+      cost: m.Cost;
+    }): Promise<m.UUID> {
+      return axios({
+        method: 'post',
+        url: `${config.apiEndpoint}/billing/addBudgetCost`,
+        params: {},
+        data: {
+          budgetUuid,
+          cost,
+        },
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        timeout: config.timeout,
+      }).then(
+        res => valueOrThrow(m.UUID, config.unwrapApiResponse(res.data)),
+        parseError,
+      ) as any;
+    },
   };
 }
