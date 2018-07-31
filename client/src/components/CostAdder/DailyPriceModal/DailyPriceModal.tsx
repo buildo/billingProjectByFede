@@ -12,71 +12,60 @@ import './dailyPriceModal.scss';
 type Props = {
   budgetUuid: string;
   budgetName: string;
-  defaultPricePerDay?: string;
+  defaultPricePerDay: string;
   onClose: () => void;
   addCost: ({ cost }: { cost: Cost }) => void;
 };
-type State = { inputValues: Cost; pricePerDay: string };
+type State = Cost;
 
 type InputNames = keyof Cost;
 
 const initialState = {
-  inputValues: {
-    title: '',
-    days: '',
-    notes: '',
-    allocationMonth: undefined,
-    allocationYear: undefined,
-    pricePerDay: '',
-  },
+  title: '',
+  days: '',
+  notes: '',
+  allocationMonth: undefined,
+  allocationYear: undefined,
+  pricePerDay: '',
 };
 
 class DailyPriceModal extends React.PureComponent<Props, State> {
-  state = { ...initialState, pricePerDay: this.props.defaultPricePerDay || '' };
-
-  clearState = () =>
-    this.setState({
-      ...initialState,
-      pricePerDay: this.props.defaultPricePerDay || '',
-    } as State);
+  state = {
+    ...initialState,
+    pricePerDay: this.props.defaultPricePerDay,
+  };
 
   handleAddCost = () => {
     const { addCost } = this.props;
-    const { inputValues } = this.state;
+    const state = this.state;
 
-    Object.keys(inputValues).forEach(
-      key => inputValues[key] == null && delete inputValues[key],
-    );
+    Object.keys(state).forEach(key => state[key] == null && delete state[key]);
 
-    addCost({ cost: inputValues });
+    addCost({ cost: state });
   };
 
   onChangeInput = (inputName: InputNames) => (inputValue: string): void => {
-    const { inputValues } = this.state;
+    const state = this.state;
 
     this.setState(({
-      inputValues: {
-        ...inputValues,
-        [inputName]: inputValue,
-      },
+      ...state,
+      [inputName]: inputValue,
     } as any) as State);
   };
 
   onChangeTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const { inputValues } = this.state;
+    const state = this.state;
     const value = e.target.value;
 
     this.setState({
-      inputValues: {
-        ...inputValues,
-        notes: value,
-      },
+      ...state,
+      notes: value,
     });
   };
 
   render() {
     const { budgetName, onClose } = this.props;
-    const { inputValues } = this.state;
+    const state = this.state;
 
     return (
       <Modal
@@ -100,7 +89,7 @@ class DailyPriceModal extends React.PureComponent<Props, State> {
         <View column className="dailyPriceModal">
           <Input
             label="Title*:"
-            value={inputValues.title}
+            value={state.title}
             onChange={this.onChangeInput('title')}
           />
 
@@ -108,14 +97,14 @@ class DailyPriceModal extends React.PureComponent<Props, State> {
             <Input
               label="Daily rate*:"
               type="number"
-              value={inputValues.pricePerDay}
+              value={state.pricePerDay}
               onChange={this.onChangeInput('pricePerDay')}
             />
 
             <Input
               label="Days*:"
               type="number"
-              value={inputValues.days}
+              value={state.days}
               onChange={this.onChangeInput('days')}
             />
           </View>
@@ -123,23 +112,23 @@ class DailyPriceModal extends React.PureComponent<Props, State> {
           <View className="total">
             <Label label="tot.: " />
             <span>
-              {inputValues.days &&
-                inputValues.pricePerDay &&
-                `${parseInt(inputValues.days, 10) *
-                  parseInt(inputValues.pricePerDay, 10)}€`}
+              {state.days &&
+                state.pricePerDay &&
+                `${parseInt(state.days, 10) *
+                  parseInt(state.pricePerDay, 10)}€`}
             </span>
           </View>
 
           <CostAllocationDorpdown
             onChange={this.onChangeInput}
-            year={inputValues.allocationYear}
-            month={inputValues.allocationMonth}
+            year={state.allocationYear}
+            month={state.allocationMonth}
           />
 
           <span style={{ fontWeight: 600 }}>Notes:</span>
           <textarea
             style={{ minHeight: 150 }}
-            value={inputValues.notes}
+            value={state.notes}
             onChange={this.onChangeTextArea}
           />
         </View>
