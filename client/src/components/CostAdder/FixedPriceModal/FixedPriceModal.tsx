@@ -99,7 +99,7 @@ class FixedPriceModal extends React.PureComponent<Props, State> {
           />
 
           <Input
-            label="Value*:"
+            label="Amount*:"
             type="number"
             value={inputValues.value}
             onChange={this.onChangeInput('value')}

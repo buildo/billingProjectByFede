@@ -28,8 +28,8 @@ const monthOptions: Array<{ value: Month; label: string }> = [
 
 type Props = {
   onChange: (i: keyof Cost) => (v: string) => void;
-  year?: Year;
-  month?: Month;
+  year?: Year | undefined;
+  month?: Month | undefined;
 };
 
 const CostAllocationDorpdown: React.SFC<Props> = ({

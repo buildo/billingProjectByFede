@@ -30,6 +30,12 @@ trait BudgetApi {
       budgetUuid: UUID,
       cost: Cost
   ): Future[Either[Throwable, UUID]]
+
+  @command
+  def modifyBudgetCost(
+      budgetUuid: UUID,
+      cost: Cost
+  ): Future[Either[Throwable, UUID]]
 }
 
 class BudgetApiImpl(
@@ -59,6 +65,15 @@ class BudgetApiImpl(
                              cost: Cost): Future[Either[Throwable, UUID]] =
     Future {
       service.addBudgetCost(budgetUuid = budgetUuid, cost = cost) match {
+        case Some(uuid: UUID) => Right(uuid)
+        case None             => Left(None.orNull)
+      }
+    }
+
+  override def modifyBudgetCost(budgetUuid: UUID,
+                                cost: Cost): Future[Either[Throwable, UUID]] =
+    Future {
+      service.modifyBudgetCost(budgetUuid = budgetUuid, cost = cost) match {
         case Some(uuid: UUID) => Right(uuid)
         case None             => Left(None.orNull)
       }
