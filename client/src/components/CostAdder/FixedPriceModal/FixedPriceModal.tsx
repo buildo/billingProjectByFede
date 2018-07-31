@@ -31,8 +31,6 @@ const initialState = {
 class FixedPriceModal extends React.PureComponent<Props, State> {
   state = initialState;
 
-  clearState = () => this.setState(initialState as State);
-
   handleAddCost = () => {
     const { addCost } = this.props;
     const { inputValues } = this.state;
@@ -42,7 +40,6 @@ class FixedPriceModal extends React.PureComponent<Props, State> {
     );
 
     addCost({ cost: inputValues });
-    this.clearState();
   };
 
   onChangeInput = (inputName: InputNames) => (inputValue: string): void => {

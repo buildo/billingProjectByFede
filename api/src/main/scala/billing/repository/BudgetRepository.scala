@@ -4,6 +4,9 @@ import java.util.UUID
 import scala.collection.concurrent.TrieMap
 
 import billing.model.{Budget, Cost}
+import billing.utils.{DateTime}
+
+import DateTime._
 
 trait BudgetRepository {
   def updateBudget(uuid: UUID, budget: Budget): UUID
@@ -18,7 +21,8 @@ class BudgetRepositoryImpl() extends BudgetRepository {
 
   override def saveBudget(budget: Budget): UUID = {
     val uuid = UUID.randomUUID
-    budgetList.put(uuid, budget)
+    val now = Some(getDateString)
+    budgetList.put(uuid, budget.copy(creationDate = now, lastUpdate = now))
     uuid
   }
 
@@ -39,7 +43,8 @@ class BudgetRepositoryImpl() extends BudgetRepository {
       .get(budgetUuid)
       .map(budget => {
         val updatedBudget =
-          budget.copy(costs = myCost :: budget.costs)
+          budget.copy(costs = myCost :: budget.costs,
+                      lastUpdate = Some(getDateString()))
         budgetList.update(budgetUuid, updatedBudget)
         budgetUuid
       })
@@ -52,7 +57,8 @@ class BudgetRepositoryImpl() extends BudgetRepository {
         val updatedCosts = budget.costs
           .updated(budget.costs.indexWhere(_.uuid == cost.uuid), cost)
 
-        val updatedBudget = budget.copy(costs = updatedCosts)
+        val updatedBudget =
+          budget.copy(costs = updatedCosts, lastUpdate = Some(getDateString()))
         budgetList.update(budgetUuid, updatedBudget)
         budgetUuid
       })

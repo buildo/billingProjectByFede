@@ -31,7 +31,7 @@ type State = {
 type InputNames = keyof State['inputValues'];
 
 const tableWidth = 600;
-const columnWidth = tableWidth / 4;
+const columnWidth = tableWidth / 5;
 const isValid = (budget: Budget) => !!budget.title;
 const initialState = {
   sortBy: 'name',
@@ -224,9 +224,30 @@ class Budgets extends React.Component<Props, State> {
                 sortBy={sortBy}
                 sortDir={sortDir}
               >
+                <Column name="creationDate" sortable width={columnWidth}>
+                  <Header>Creation date</Header>
+                  <Cell>
+                    {(_, { creationDate }) => {
+                      const date = new Date(creationDate);
+
+                      return <span>{date.toLocaleDateString('it')}</span>;
+                    }}
+                  </Cell>
+                </Column>
+
                 <Column name="lastUpdate" sortable width={columnWidth}>
                   <Header>Last update</Header>
-                  <Cell>{() => <span>30/07/2018</span>}</Cell>
+                  <Cell>
+                    {(_, { lastUpdate }) => {
+                      const date = new Date(lastUpdate);
+
+                      return (
+                        <span>{`${date.toLocaleDateString(
+                          'it',
+                        )} - ${date.getHours()}:${date.getMinutes()}`}</span>
+                      );
+                    }}
+                  </Cell>
                 </Column>
 
                 <Column name="title" sortable width={columnWidth}>

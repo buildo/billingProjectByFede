@@ -29,7 +29,7 @@ class DailyPriceModal extends React.PureComponent<Props, State> {
   state = { ...initialState, ...this.props.cost };
 
   handleUpdateCost = () => {
-    const { updateCost } = this.props;
+    const { updateCost, onClose } = this.props;
     const values = this.state;
 
     Object.keys(values).forEach(
@@ -37,6 +37,7 @@ class DailyPriceModal extends React.PureComponent<Props, State> {
     );
 
     updateCost({ cost: values });
+    onClose();
   };
 
   onChangeInput = (inputName: InputNames) => (inputValue: string): void => {

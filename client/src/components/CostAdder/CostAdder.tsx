@@ -79,7 +79,7 @@ class BudgetAdder extends React.PureComponent<Props, State> {
             addCost={this.handleAddCost}
             budgetUuid={budgetUuid}
             budgetName={budgetName}
-            defaultPricePerDay={defaultPricePerDay}
+            defaultPricePerDay={defaultPricePerDay || ''}
           />
         )}
       </View>

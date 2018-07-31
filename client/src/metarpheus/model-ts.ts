@@ -1,9 +1,8 @@
 // DO NOT EDIT MANUALLY - metarpheus-generated
 import * as t from 'io-ts';
 
-export type UUID = string;
-
 export const UUID = t.string;
+export type UUID = string;
 
 export interface Cost {
   title: string;
@@ -22,6 +21,8 @@ export interface Budget {
   notes?: string;
   defaultPricePerDay?: string;
   costs: Array<Cost>;
+  lastUpdate?: Date;
+  creationDate?: Date;
 }
 
 export const Cost = t.intersection(
@@ -49,6 +50,8 @@ export const Budget = t.intersection(
       costs: t.array(Cost),
     }),
     t.partial({
+      lastUpdate: t.string,
+      creationDate: t.string,
       value: t.union([t.string, t.undefined, t.null]),
       notes: t.union([t.string, t.undefined, t.null]),
       defaultPricePerDay: t.union([t.string, t.undefined, t.null]),
