@@ -63,7 +63,7 @@ export default function getRoutes(config: RouteConfig) {
       budget,
     }: {
       budget: m.Budget;
-    }): Promise<m.UUID> {
+    }): Promise<string> {
       return axios({
         method: 'post',
         url: `${config.apiEndpoint}/billing/saveBudget`,
@@ -76,7 +76,7 @@ export default function getRoutes(config: RouteConfig) {
         },
         timeout: config.timeout,
       }).then(
-        res => valueOrThrow(m.UUID, config.unwrapApiResponse(res.data)),
+        res => valueOrThrow(t.string, config.unwrapApiResponse(res.data)),
         parseError,
       ) as any;
     },
@@ -85,9 +85,9 @@ export default function getRoutes(config: RouteConfig) {
       uuid,
       budget,
     }: {
-      uuid: m.UUID;
+      uuid: string;
       budget: m.Budget;
-    }): Promise<m.UUID> {
+    }): Promise<string> {
       return axios({
         method: 'post',
         url: `${config.apiEndpoint}/billing/updateBudget`,
@@ -101,7 +101,7 @@ export default function getRoutes(config: RouteConfig) {
         },
         timeout: config.timeout,
       }).then(
-        res => valueOrThrow(m.UUID, config.unwrapApiResponse(res.data)),
+        res => valueOrThrow(t.string, config.unwrapApiResponse(res.data)),
         parseError,
       ) as any;
     },
@@ -110,9 +110,9 @@ export default function getRoutes(config: RouteConfig) {
       budgetUuid,
       cost,
     }: {
-      budgetUuid: m.UUID;
+      budgetUuid: string;
       cost: m.Cost;
-    }): Promise<m.UUID> {
+    }): Promise<string> {
       return axios({
         method: 'post',
         url: `${config.apiEndpoint}/billing/addBudgetCost`,
@@ -126,7 +126,32 @@ export default function getRoutes(config: RouteConfig) {
         },
         timeout: config.timeout,
       }).then(
-        res => valueOrThrow(m.UUID, config.unwrapApiResponse(res.data)),
+        res => valueOrThrow(t.string, config.unwrapApiResponse(res.data)),
+        parseError,
+      ) as any;
+    },
+
+    budgetApi_modifyBudgetCost: function({
+      budgetUuid,
+      cost,
+    }: {
+      budgetUuid: string;
+      cost: m.Cost;
+    }): Promise<string> {
+      return axios({
+        method: 'post',
+        url: `${config.apiEndpoint}/billing/modifyBudgetCost`,
+        params: {},
+        data: {
+          budgetUuid,
+          cost,
+        },
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        timeout: config.timeout,
+      }).then(
+        res => valueOrThrow(t.string, config.unwrapApiResponse(res.data)),
         parseError,
       ) as any;
     },

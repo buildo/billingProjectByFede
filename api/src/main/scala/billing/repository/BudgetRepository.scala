@@ -8,6 +8,7 @@ import billing.model.{Budget, Cost}
 trait BudgetRepository {
   def updateBudget(uuid: UUID, budget: Budget): UUID
   def addBudgetCost(cost: Cost, budgetUuid: UUID): Option[UUID]
+  def modifyBudgetCost(cost: Cost, budgetUuid: UUID): Option[UUID]
   def saveBudget(budget: Budget): UUID
   def getBudgets(): Map[UUID, Budget]
 }
@@ -32,10 +33,26 @@ class BudgetRepositoryImpl() extends BudgetRepository {
   }
 
   override def addBudgetCost(cost: Cost, budgetUuid: UUID) = {
+    val myCost = cost.copy(uuid = Some(UUID.randomUUID))
+
     budgetList
       .get(budgetUuid)
       .map(budget => {
-        val updatedBudget = budget.copy(costs = cost :: budget.costs)
+        val updatedBudget =
+          budget.copy(costs = myCost :: budget.costs)
+        budgetList.update(budgetUuid, updatedBudget)
+        budgetUuid
+      })
+  }
+
+  override def modifyBudgetCost(cost: Cost, budgetUuid: UUID) = {
+    budgetList
+      .get(budgetUuid)
+      .map(budget => {
+        val updatedCosts = budget.costs
+          .updated(budget.costs.indexWhere(_.uuid == cost.uuid), cost)
+
+        val updatedBudget = budget.copy(costs = updatedCosts)
         budgetList.update(budgetUuid, updatedBudget)
         budgetUuid
       })

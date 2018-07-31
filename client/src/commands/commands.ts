@@ -21,3 +21,10 @@ export const addCost = Command({
   run: ({ cost, budgetUuid }) =>
     API.metaRoutes.budgetApi_addBudgetCost({ cost, budgetUuid }),
 });
+
+export const updateCost = Command({
+  params: { cost: Cost, budgetUuid: t.string },
+  invalidates: { budgets },
+  run: ({ cost, budgetUuid }) =>
+    API.metaRoutes.budgetApi_modifyBudgetCost({ cost, budgetUuid }),
+});

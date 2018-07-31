@@ -13,6 +13,15 @@ export interface Cost {
   days?: string;
   allocationMonth?: string;
   allocationYear?: string;
+  uuid?: string;
+}
+
+export interface Budget {
+  title: string;
+  value?: string;
+  notes?: string;
+  defaultPricePerDay?: string;
+  costs: Array<Cost>;
 }
 
 export const Cost = t.intersection(
@@ -21,6 +30,7 @@ export const Cost = t.intersection(
       title: t.string,
     }),
     t.partial({
+      uuid: t.union([t.string, t.undefined, t.null]),
       value: t.union([t.string, t.undefined, t.null]),
       notes: t.union([t.string, t.undefined, t.null]),
       pricePerDay: t.union([t.string, t.undefined, t.null]),
@@ -31,13 +41,6 @@ export const Cost = t.intersection(
   ],
   'Cost',
 );
-export interface Budget {
-  title: string;
-  value?: string;
-  notes?: string;
-  defaultPricePerDay?: string;
-  costs: Array<Cost>;
-}
 
 export const Budget = t.intersection(
   [

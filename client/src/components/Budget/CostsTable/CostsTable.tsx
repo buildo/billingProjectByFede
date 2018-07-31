@@ -11,7 +11,10 @@ type State = {
   sortDir: SortDir;
 };
 
-type Props = { costs: Array<Cost> };
+type Props = {
+  costs: Array<Cost>;
+  onCostClick({ costToModify }: { costToModify: Cost }): void;
+};
 
 const tableWidth = 600;
 const columnWidth = tableWidth / 4;
@@ -51,7 +54,16 @@ class CostsTable extends React.PureComponent<Props, State> {
       >
         <Column name="title" sortable width={columnWidth}>
           <Header>Title</Header>
-          <Cell>{(_, { title }) => <span>{title}</span>}</Cell>
+          <Cell>
+            {(_, cost: Cost) => (
+              <span
+                className="clickable"
+                onClick={() => this.props.onCostClick({ costToModify: cost })}
+              >
+                {cost.title}
+              </span>
+            )}
+          </Cell>
         </Column>
 
         <Column name="allocation" sortable width={columnWidth}>
@@ -70,9 +82,15 @@ class CostsTable extends React.PureComponent<Props, State> {
         <Column name="days" sortable width={columnWidth}>
           <Header>Days</Header>
           <Cell>
-            {(_, { days, pricePerDay }) => (
-              <span>{days && `${days} x ${pricePerDay}€`}</span>
-            )}
+            {(_, { days, pricePerDay }) =>
+              days ? (
+                <span>
+                  {days}gg
+                  <strong> x </strong>
+                  {pricePerDay}€
+                </span>
+              ) : null
+            }
           </Cell>
         </Column>
 

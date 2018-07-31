@@ -10,6 +10,7 @@ trait BudgetService {
   def saveBudget(budget: Budget): UUID;
   def updateBudget(budget: Budget, uuid: UUID): UUID;
   def addBudgetCost(cost: Cost, budgetUuid: UUID): Option[UUID]
+  def modifyBudgetCost(cost: Cost, budgetUuid: UUID): Option[UUID]
 }
 
 class BudgetServiceImpl(repo: BudgetRepository) extends BudgetService {
@@ -27,5 +28,9 @@ class BudgetServiceImpl(repo: BudgetRepository) extends BudgetService {
 
   override def addBudgetCost(cost: Cost, uuid: UUID): Option[UUID] = {
     repo.addBudgetCost(budgetUuid = uuid, cost = cost)
+  }
+
+  override def modifyBudgetCost(cost: Cost, uuid: UUID): Option[UUID] = {
+    repo.modifyBudgetCost(budgetUuid = uuid, cost = cost)
   }
 }
