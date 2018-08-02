@@ -37,7 +37,7 @@ const parseError = (err: AxiosError) => {
 
 export default function getRoutes(config: RouteConfig) {
   return {
-    budgetApi_getBudgets: function(): Promise<{ [key: string]: m.Budget }> {
+    budgetApi_getBudgets: function(): Promise<m.Budget[]> {
       return axios({
         method: 'get',
         url: `${config.apiEndpoint}/billing/getBudgets`,

@@ -11,6 +11,7 @@ lazy val root = project
       "io.circe" %% "circe-core" % circeVersion,
       "io.circe" %% "circe-generic" % circeVersion,
       "io.circe" %% "circe-parser" % circeVersion,
+      "io.circe" %% "circe-generic-extras" % circeVersion,
       "io.buildo" %% "enumero" % "1.2.0",
       "io.buildo" %% "enumero-circe-support" % "1.3.0",
       "io.buildo" %% "wiro-http-server" % "0.6.12",
@@ -19,7 +20,10 @@ lazy val root = project
       "com.typesafe.akka" %% "akka-stream" % "2.5.13",
       "de.heikoseeberger" %% "akka-http-circe" % "1.21.0",
       "org.slf4j" % "slf4j-nop" % "1.6.4",
-      "org.scalatest" %% "scalatest" % "3.0.5" % "test"
+      "org.scalatest" %% "scalatest" % "3.0.5" % "test",
+      "org.postgresql" % "postgresql" % "9.4.1208",
+      "io.getquill" %% "quill-async-postgres" % "2.5.4",
+      "io.getquill" %% "quill-jdbc" % "2.5.4"
     ),
     addCompilerPlugin(
       "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full)

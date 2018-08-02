@@ -1,0 +1,1 @@
+docker run -p 5432:5432 -v /Users/federicosordillo/git/buildo/onboarding/rps/data:/var/lib/postgresql/data --name billing -e POSTGRES_DB=billing -e POSTGRES_PASSWORD=password -e POSTGRES_USER=user -d postgres

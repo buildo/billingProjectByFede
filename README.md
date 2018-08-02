@@ -14,7 +14,16 @@ then start it by typing `corsproxy` in your terminal
 
 **start the server**:
 
-run `sbt` from the api foder, then, from `sbt` console, run `~reStart` to start the server (and watch api files for changes)
+- install `docker`
+- download a postgres docker image (suggested: `docker pull postgres`)
+- start a postgres container `docker run --name billing -e POSTGRES_PASSWORD=password -d postgres`
+  run `sbt` from the api foder, then, from `sbt` console, run `~reStart` to start the server (and watch api files for changes)
+
+**to connect to db:**
+
+```
+docker run -it --rm --link billing:postgres postgres psql -h postgres -U user
+```
 
 **start the client**:
 

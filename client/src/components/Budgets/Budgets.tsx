@@ -51,14 +51,13 @@ class Budgets extends React.Component<Props, State> {
 
   clearState = () => this.setState(initialState as State);
 
-  sortData = (budgets: { [key: string]: Budget }) => {
+  sortData = (budgets: Budget[]) => {
     const { sortBy, sortDir } = this.state;
 
     return _.orderBy(
-      Object.keys(budgets).map(id => ({
-        ...budgets[id],
-        id,
-        completion: getBudgetConsumedPercentage(budgets[id]),
+      budgets.map(budget => ({
+        ...budget,
+        completion: getBudgetConsumedPercentage(budget),
       })),
       [sortBy],
       [sortDir as string],
@@ -182,7 +181,7 @@ class Budgets extends React.Component<Props, State> {
               <span style={{ fontWeight: 600 }}>notes:</span>
               <textarea
                 style={{ minHeight: 150 }}
-                value={inputValues.notes}
+                value={inputValues.notes as string}
                 onChange={this.onChangeTextArea}
               />
             </View>
@@ -253,11 +252,11 @@ class Budgets extends React.Component<Props, State> {
                 <Column name="title" sortable width={columnWidth}>
                   <Header>Title</Header>
                   <Cell>
-                    {(_, { title, id }) => (
+                    {(_, { title, uuid }) => (
                       <View
                         grow={1}
                         className="clickable"
-                        id={id}
+                        id={uuid}
                         onClick={this.goToBudgetDetail}
                       >
                         {title}

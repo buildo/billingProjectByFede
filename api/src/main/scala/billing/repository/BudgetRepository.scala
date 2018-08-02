@@ -1,66 +1,109 @@
 package billing.repository
 
 import java.util.UUID
+import scala.concurrent.duration.Duration
 import scala.collection.concurrent.TrieMap
+import scala.concurrent.{Await, ExecutionContext, Awaitable}
+import io.getquill._
+import io.circe.{Printer, Encoder, Decoder, Json}
+import io.circe.syntax._
+import io.circe.parser.decode
+import io.circe.generic.auto._
 
 import billing.model.{Budget, Cost}
 import billing.utils.{DateTime}
 
 import DateTime._
 
-trait BudgetRepository {
-  def updateBudget(uuid: UUID, budget: Budget): UUID
-  def addBudgetCost(cost: Cost, budgetUuid: UUID): Option[UUID]
-  def modifyBudgetCost(cost: Cost, budgetUuid: UUID): Option[UUID]
-  def saveBudget(budget: Budget): UUID
-  def getBudgets(): Map[UUID, Budget]
+trait Decoders {
+  implicit val decodeSubmissionData: MappedEncoding[String, Seq[Cost]] =
+    MappedEncoding(decode[Seq[Cost]](_).fold(err => Seq.empty[Cost], v => v))
 }
 
-class BudgetRepositoryImpl() extends BudgetRepository {
+trait Encoders {
+  private val jsonPrinter = Printer.noSpaces.copy(dropNullValues = true)
+  implicit val encodeCost: MappedEncoding[Seq[Cost], String] = MappedEncoding(
+    _.asJson.pretty(jsonPrinter))
+}
+
+trait BudgetRepository {
+  def addBudgetCost(cost: Cost, budgetUuid: UUID): Awaitable[UUID]
+  def modifyBudgetCost(cost: Cost, budgetUuid: UUID): Awaitable[UUID]
+  def saveBudget(budget: Budget): Awaitable[UUID]
+  def getBudgets(): Awaitable[List[billing.model.Budget]]
+}
+
+class BudgetRepositoryImpl(
+    implicit ec: ExecutionContext
+) extends BudgetRepository {
+  private val ctx =
+    new PostgresAsyncContext(NamingStrategy(LowerCase, PostgresEscape), "db")
+    with Encoders with Decoders
+
+  import ctx._
+
+  implicit private val budgetsSchemaMeta = schemaMeta[Budget]("budgets")
+
   private val budgetList: TrieMap[UUID, Budget] = TrieMap.empty
 
-  override def saveBudget(budget: Budget): UUID = {
-    val uuid = UUID.randomUUID
+  override def saveBudget(budget: Budget): Awaitable[UUID] = {
+    val uuid = UUID.randomUUID.toString()
     val now = Some(getDateString)
-    budgetList.put(uuid, budget.copy(creationDate = now, lastUpdate = now))
-    uuid
+    val completeBudget =
+      budget.copy(uuid = Some(uuid), creationDate = now, lastUpdate = now)
+
+    val insert = quote {
+      query[Budget].insert(lift(completeBudget))
+    }
+
+    ctx.run(insert).map(_ => UUID.fromString(uuid))
   }
 
-  // FIXME: right now costs are handled as updates to Budget, later they should live separately in their own controller
-  override def updateBudget(uuid: UUID, budget: Budget): UUID = {
-    budgetList.update(uuid, budget)
-    uuid
+  override def getBudgets(): Awaitable[List[billing.model.Budget]] = {
+    val select = quote {
+      query[Budget]
+    }
+
+    ctx.run(select)
   }
 
-  override def getBudgets(): Map[UUID, Budget] = {
-    budgetList.toMap[UUID, Budget]
-  }
-
-  override def addBudgetCost(cost: Cost, budgetUuid: UUID) = {
+  override def addBudgetCost(cost: Cost, budgetUuid: UUID): Awaitable[UUID] = {
+    val now = Some(getDateString)
     val myCost = cost.copy(uuid = Some(UUID.randomUUID))
-
-    budgetList
-      .get(budgetUuid)
-      .map(budget => {
-        val updatedBudget =
-          budget.copy(costs = myCost :: budget.costs,
-                      lastUpdate = Some(getDateString()))
-        budgetList.update(budgetUuid, updatedBudget)
-        budgetUuid
+    val stringUuid = budgetUuid.toString
+    val selectBudget = quote {
+      query[Budget].filter(_.uuid.getOrElse("") == lift(stringUuid))
+    }
+    for {
+      budget <- ctx.run(selectBudget)
+      updatedCosts: Seq[Cost] = budget.headOption
+        .map(_.costs)
+        .getOrElse(Seq.empty) ++ Seq(myCost)
+      _ <- ctx.run(quote {
+        query[Budget]
+          .filter(_.uuid.getOrElse("") == lift(stringUuid))
+          .update(_.costs -> lift(updatedCosts), _.lastUpdate -> lift(now: Option[String]))
       })
+    } yield budgetUuid
   }
 
-  override def modifyBudgetCost(cost: Cost, budgetUuid: UUID) = {
-    budgetList
-      .get(budgetUuid)
-      .map(budget => {
-        val updatedCosts = budget.costs
-          .updated(budget.costs.indexWhere(_.uuid == cost.uuid), cost)
-
-        val updatedBudget =
-          budget.copy(costs = updatedCosts, lastUpdate = Some(getDateString()))
-        budgetList.update(budgetUuid, updatedBudget)
-        budgetUuid
+  override def modifyBudgetCost(cost: Cost, budgetUuid: UUID): Awaitable[UUID] = {
+    val now = Some(getDateString)
+    val stringUuid = budgetUuid.toString
+    val selectBudget = quote {
+      query[Budget].filter(_.uuid.getOrElse("") == lift(stringUuid))
+    }
+    for {
+      budget <- ctx.run(selectBudget)
+      updatedCosts: Seq[Cost] = budget.headOption
+        .map(_.costs)
+        .getOrElse(Seq.empty)
+        .filter(_.uuid != cost.uuid) ++ Seq(cost)
+      _ <- ctx.run(quote {
+        query[Budget]
+          .filter(_.uuid.getOrElse("") == lift(stringUuid))
+          .update(_.costs -> lift(updatedCosts), _.lastUpdate -> lift(now: Option[String]))
       })
+    } yield budgetUuid
   }
 }
