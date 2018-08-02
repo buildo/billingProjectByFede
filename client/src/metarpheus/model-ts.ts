@@ -17,12 +17,13 @@ export interface Cost {
 
 export interface Budget {
   title: string;
-  value?: string;
-  notes?: string;
-  defaultPricePerDay?: string;
+  value?: string | null;
+  notes?: string | null;
+  defaultPricePerDay?: string | null;
   costs: Array<Cost>;
-  lastUpdate?: Date;
-  creationDate?: Date;
+  lastUpdate?: string | null;
+  creationDate?: string | null;
+  uuid?: UUID | null;
 }
 
 export const Cost = t.intersection(
@@ -50,8 +51,9 @@ export const Budget = t.intersection(
       costs: t.array(Cost),
     }),
     t.partial({
-      lastUpdate: t.string,
-      creationDate: t.string,
+      uuid: t.union([t.string, t.undefined, t.null]),
+      lastUpdate: t.union([t.string, t.undefined, t.null]),
+      creationDate: t.union([t.string, t.undefined, t.null]),
       value: t.union([t.string, t.undefined, t.null]),
       notes: t.union([t.string, t.undefined, t.null]),
       defaultPricePerDay: t.union([t.string, t.undefined, t.null]),

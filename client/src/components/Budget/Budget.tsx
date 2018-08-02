@@ -38,12 +38,14 @@ class BudgetComponent extends React.PureComponent<Props, State> {
   };
 
   handleUpdateCost = ({ cost }: { cost: Cost }) =>
-    this.getBudget().fold(null, (budget: Budget & { id: string }) =>
-      this.props.updateCost({
+    this.getBudget().fold(null, (budget: Budget & { id: string }) => {
+      console.log(budget);
+
+      return this.props.updateCost({
         cost,
-        budgetUuid: budget.id,
-      }),
-    );
+        budgetUuid: budget.uuid as string,
+      });
+    });
 
   handleCostClick = ({ costToModify }: { costToModify: Cost }) =>
     this.setState({
@@ -62,10 +64,11 @@ class BudgetComponent extends React.PureComponent<Props, State> {
       budgets.ready &&
       !currentView.loading &&
       currentView.value.view === 'budget-details'
-      ? some({
-          ...budgets.value[currentView.value.id],
-          id: currentView.value.id,
-        })
+      ? some(budgets.value.find(
+          budget =>
+            currentView.value.view === 'budget-details' &&
+            budget.uuid === currentView.value.id,
+        ) as Budget)
       : none;
   };
 
@@ -133,9 +136,9 @@ class BudgetComponent extends React.PureComponent<Props, State> {
         >
           <View style={{ width: '600px' }} column hAlignContent="right">
             <CostAdder
-              budgetUuid={budget.id}
+              budgetUuid={budget.uuid as string}
               budgetName={budget.title}
-              defaultPricePerDay={budget.defaultPricePerDay}
+              defaultPricePerDay={budget.defaultPricePerDay || undefined}
             />
 
             <CostsTable

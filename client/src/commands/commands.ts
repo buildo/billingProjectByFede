@@ -9,10 +9,7 @@ export { doUpdateLocation };
 export const createBudget = Command({
   params: { budget: Budget },
   invalidates: { budgets },
-  run: budget =>
-    API.metaRoutes.budgetApi_saveBudget(budget).catch(error => ({
-      error,
-    })),
+  run: budget => API.metaRoutes.budgetApi_saveBudget(budget),
 });
 
 export const addCost = Command({
