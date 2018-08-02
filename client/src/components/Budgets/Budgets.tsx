@@ -33,9 +33,10 @@ type InputNames = keyof State['inputValues'];
 const tableWidth = 600;
 const columnWidth = tableWidth / 5;
 const isValid = (budget: Budget) => !!budget.title;
+const addLeadingZero = (i: number) => (i < 10 ? `0${i}` : i.toString());
 const initialState = {
-  sortBy: 'name',
-  sortDir: 'asc',
+  sortBy: 'lastUpdate',
+  sortDir: 'desc',
   modalIsOpen: false,
   inputValues: {
     title: '',
@@ -243,7 +244,9 @@ class Budgets extends React.Component<Props, State> {
                       return (
                         <span>{`${date.toLocaleDateString(
                           'it',
-                        )} - ${date.getHours()}:${date.getMinutes()}`}</span>
+                        )} - ${date.getHours()}:${addLeadingZero(
+                          date.getMinutes(),
+                        )}`}</span>
                       );
                     }}
                   </Cell>

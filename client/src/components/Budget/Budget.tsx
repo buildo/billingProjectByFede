@@ -103,7 +103,7 @@ class BudgetComponent extends React.PureComponent<Props, State> {
           </h1>
         </View>
 
-        <View style={{ width: '100%' }} grow={1}>
+        <View style={{ width: 600 }} grow={1}>
           <View column grow={1}>
             <h3>value:</h3>
             <div>
@@ -122,7 +122,7 @@ class BudgetComponent extends React.PureComponent<Props, State> {
           </View>
         </View>
 
-        <View style={{ width: '100%' }} column grow={1}>
+        <View style={{ width: 600 }} column grow={1}>
           <h3>notes:</h3>
           <div>{budget.notes}</div>
         </View>

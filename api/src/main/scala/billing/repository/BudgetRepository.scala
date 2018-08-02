@@ -78,7 +78,7 @@ class BudgetRepositoryImpl(
       budget <- ctx.run(selectBudget)
       updatedCosts: Seq[Cost] = budget.headOption
         .map(_.costs)
-        .getOrElse(Seq.empty) ++ Seq(myCost)
+        .getOrElse(Seq.empty) ++: Seq(myCost)
       _ <- ctx.run(quote {
         query[Budget]
           .filter(_.uuid.getOrElse("") == lift(stringUuid))

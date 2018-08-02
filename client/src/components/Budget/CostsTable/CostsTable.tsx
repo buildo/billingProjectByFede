@@ -7,7 +7,7 @@ import { addCommas, getCostValue } from 'utils/costs';
 type SortDir = 'asc' | 'desc' | undefined;
 
 type State = {
-  sortBy: string;
+  sortBy: string | undefined;
   sortDir: SortDir;
 };
 
@@ -21,11 +21,11 @@ const columnWidth = tableWidth / 4;
 
 class CostsTable extends React.PureComponent<Props, State> {
   state = {
-    sortBy: 'title',
-    sortDir: 'asc',
+    sortBy: undefined,
+    sortDir: undefined,
   } as State;
 
-  sortData = (data: Array<Cost>) => data;
+  sortData = (data: Array<Cost>) => data.reverse();
 
   onSortChange = ({
     sortBy,
@@ -61,6 +61,21 @@ class CostsTable extends React.PureComponent<Props, State> {
                 onClick={() => this.props.onCostClick({ costToModify: cost })}
               >
                 {cost.title}
+                {cost.notes && (
+                  <div
+                    style={{
+                      height: 15,
+                      width: 15,
+                      borderRadius: '50%',
+                      backgroundColor: 'grey',
+                      display: 'inline-block',
+                      marginLeft: 5,
+                      verticalAlign: 'bottom',
+                      textAlign: 'center',
+                      fontSize: 10,
+                    }}
+                  />
+                )}
               </span>
             )}
           </Cell>
